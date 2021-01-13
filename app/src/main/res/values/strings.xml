@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Meter Bill</string>
-    <string name="price">Price</string>
-    <string name="cost">Cost</string>
-    <string name="units">Units</string>
-    <string name="type_units">type units</string>
-    <string name="total_costs">Total Costs</string>
+    <string name="price">နှုန်းထား</string>
+    <string name="cost">ကျသင့်ငွေ</string>
+    <string name="units">သုံးစွဲယူနစ်</string>
+    <string name="type_units">သုံးစွဲယူနစ်</string>
+    <string name="total_costs">ကျသင့်ငွေစုစုပေါင်း</string>
+    <string name="home_meter">အိမ်သုံး ယူနစ်&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="other_meter">လုပ်ငန်းသုံး ယူနစ်</string>
+
 </resources>

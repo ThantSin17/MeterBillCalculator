@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meter Bill</string>
+    <string name="price">Price</string>
+    <string name="cost">Cost</string>
+    <string name="units">Units</string>
+    <string name="type_units">type units</string>
+    <string name="total_costs">Total Costs</string>
+    <string name="home_meter">အိမ်သုံး ယူနစ်  </string>
+    <string name="other_meter">လုပ်ငန်းသုံး ယူနစ်</string>
+</resources>

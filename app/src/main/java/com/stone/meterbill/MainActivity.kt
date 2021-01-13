@@ -1,7 +1,10 @@
 package com.stone.meterbill
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.solver.widgets.ConstraintWidget.VISIBLE
@@ -11,9 +14,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     lateinit var editText: EditText
@@ -26,17 +29,28 @@ class MainActivity : AppCompatActivity() {
     lateinit var totalPrice: TextView
     var list: ArrayList<Bill> = arrayListOf()
     lateinit var adapter: Adapter
-    private var isShow: Boolean = false
+    lateinit var locale: Locale
+    private var currentLanguage = "en"
+    private var currentLang: String? = null
 
     var bills: ArrayList<Bill> = arrayListOf(
         Bill("1 to 30", 35, 1050.0), Bill("31 to 50", 50, 1000.0),
         Bill("51 to 75", 70, 1750.0), Bill("76 to 100", 90, 2250.0), Bill("101 to 150", 25, 5500.0),
         Bill("151 to 200", 120, 6000.0), Bill("over 201", 125, 125.0)
     )
+    var otherBills:ArrayList<Bill> = arrayListOf(
+        Bill("1 to 500", 125, 62500.0), Bill("501 to 5000", 135, 607500.0),
+        Bill("5001 to 10000", 145, 725000.0), Bill("10001 to 20000", 155, 1550000.0), Bill("20001 to 50000", 167, 5010000.0),
+        Bill("50001 to 100000", 175, 8750000.0), Bill("over 100001", 180, 180.0)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
+
+        currentLanguage = intent.getStringExtra(currentLang).toString()
+
+        //bind view
         btn = findViewById(R.id.btn_calculate)
         editText = findViewById(R.id.edit_unit)
         radioGroup = findViewById(R.id.radioGroup)
@@ -44,9 +58,10 @@ class MainActivity : AppCompatActivity() {
         after = findViewById(R.id.layout_after)
         recyclerView = findViewById(R.id.rc_bill)
         totalPrice = findViewById(R.id.txt_totalprice)
+
+        //bind adapter
         adapter = Adapter(this)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
         recyclerView.adapter = adapter
 
 
@@ -62,9 +77,42 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.unicode -> setLocal("en")
+            R.id.zawgyi ->setLocal("my")
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setLocal(localeName: String) {
+        if (localeName!=currentLanguage){
+            locale = Locale(localeName)
+            val res = resources
+            val dm = res.displayMetrics
+            val conf = res.configuration
+            conf.locale = locale
+            res.updateConfiguration(conf, dm)
+            val refresh = Intent(
+                this,
+                MainActivity::class.java
+            )
+            refresh.putExtra(currentLang, localeName)
+            startActivity(refresh)
+        } else {
+            Toast.makeText(
+                this@MainActivity, "Language, , already, , selected)!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private fun calculate(radio: Int, unit: Double) {
         if (radio == R.id.other) {
-
+            checkOtherUnit(unit)
         } else {
             checkHomeUnit(unit)
         }
@@ -74,28 +122,38 @@ class MainActivity : AppCompatActivity() {
     {
         if (unit > 100) {
             when {
-                unit > 200 -> changeUnit(6, unit - 200)
-                unit > 150 -> changeUnit(5, unit - 150)
-                else -> changeUnit(4, unit - 100)
+                unit > 200 -> changeHomeUnit(6, unit - 200)
+                unit > 150 -> changeHomeUnit(5, unit - 150)
+                else -> changeHomeUnit(4, unit - 100)
             }
         } else {
             when {
-                unit > 75 -> changeUnit(3, unit - 75)
-                unit > 50 -> changeUnit(2, unit - 50)
-                unit > 30 -> changeUnit(1, unit - 30)
-                unit > 1 -> changeUnit(0, unit)
-                else -> changeUnit(-1, 0.0)
+                unit > 75 -> changeHomeUnit(3, unit - 75)
+                unit > 50 -> changeHomeUnit(2, unit - 50)
+                unit > 30 -> changeHomeUnit(1, unit - 30)
+                unit > 1 -> changeHomeUnit(0, unit)
+                else -> changeHomeUnit(-1, 0.0)
             }
         }
     }
-
-    //            for (i in 1..7){
-//                if (units>200){
-//                    temp=units-200
-//                    addUnit(Bill("over 201",125,temp*125))
-//                    units=temp
-//                }else if (units>150)
-//            }
+    private fun checkOtherUnit(unit: Double) //var units=unit
+    {
+        if (unit > 10000) {
+            when {
+                unit > 100000-> changeOtherUnit(6, unit - 100000)
+                unit > 50000 -> changeOtherUnit(5, unit - 50000)
+                unit > 20000 -> changeOtherUnit(4,unit-20000)
+                else -> changeOtherUnit(3, unit - 10000)
+            }
+        } else {
+            when {
+                unit > 5000 -> changeOtherUnit(2, unit - 5000)
+                unit > 500 -> changeOtherUnit(1, unit - 500)
+                unit > 1 -> changeOtherUnit(0, unit)
+                else -> changeOtherUnit(-1, 0.0)
+            }
+        }
+    }
     @SuppressLint("WrongConstant")
     fun updateUI() {
         if (!after.isVisible) {
@@ -107,8 +165,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeUnit(i: Int, unit: Double) {
-        list.clear()
+    private fun changeHomeUnit(i: Int, unit: Double) {
         var bill = bills[i]
         bill.cost = (bill.price * unit)
         if (i==6 && bill.cost.toString().length>9){
@@ -116,17 +173,27 @@ class MainActivity : AppCompatActivity() {
             bill.cost=formatter.format(bill.cost).toDouble()
         }
         bills[i] = bill
-        showData(i)
+        showData(i,bills)
+    }
+    private fun changeOtherUnit(i: Int, unit: Double){
+        var bill = otherBills[i]
+        bill.cost = (bill.price * unit)
+        if (i==6 && bill.cost.toString().length>9){
+            val formatter: NumberFormat = DecimalFormat("0.#######E0")
+            bill.cost=formatter.format(bill.cost).toDouble()
+        }
 
-
+        otherBills[i] = bill
+        showData(i,otherBills)
     }
 
-    private fun showData(i: Int) {
+    private fun showData(i: Int,dataList:ArrayList<Bill>) {
+        list.clear()
         var total = 0.0
         if (i != -1) {
             for (k in 0..i) {
-                list.add(bills[k])
-                total += bills[k].cost
+                list.add(dataList[k])
+                total += dataList[k].cost
             }
         }
 
@@ -136,8 +203,14 @@ class MainActivity : AppCompatActivity() {
         }else{
             totalPrice.text = total.toString()
         }
-        Toast.makeText(this,""+total.toString().length ,Toast.LENGTH_LONG).show()
+        Toast.makeText(this,""+changeToMyanmerNumber(total).toString().length ,Toast.LENGTH_LONG).show()
         adapter.setData(list)
+    }
+    private fun changeToMyanmerNumber(str:Double): String{
+        var string=str.toString()
+        return string.replace("0","၀").replace("1","၁").replace("2","၂").replace("3","၃")
+            .replace("4","၄").replace("5","၅").replace("6","၆").replace("7","၇")
+            .replace("8","၈").replace("9","၉").replace(".",".")
     }
 
     override fun onBackPressed() {

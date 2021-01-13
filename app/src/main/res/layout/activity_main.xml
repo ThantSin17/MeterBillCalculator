@@ -44,17 +44,19 @@
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/home"
-                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Meter      "
+                android:checked="true"
+                android:fontFamily="@font/pyidaungsu_numbers"
+                android:text="@string/home_meter"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Others"
+                android:text="@string/other_meter"
+                android:fontFamily="@font/pyidaungsu_numbers"
                 android:textStyle="bold" />
         </RadioGroup>
 
@@ -64,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
+            android:fontFamily="@font/pyidaungsu_numbers"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
@@ -76,7 +79,7 @@
             android:paddingStart="15dp"
             android:paddingLeft="15dp"
             android:textColor="#040303"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +128,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#040303"
-                android:includeFontPadding="false"
                 android:textStyle="bold"
                 android:text="@string/units"
                 android:layout_marginLeft="10dp" />
@@ -137,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#040303"
-                android:includeFontPadding="false"
                 android:textStyle="bold"
                 android:text="@string/price" />
 
@@ -149,7 +150,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#040303"
-                android:includeFontPadding="false"
                 android:textStyle="bold"
                 android:text="@string/cost"
                 android:layout_marginRight="10dp" />
@@ -181,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#040303"
+                android:fontFamily="@font/pyidaungsu_numbers"
                 android:includeFontPadding="false"
                 android:textStyle="bold"
                 android:text="@string/total_costs" />
@@ -193,6 +194,7 @@
                 android:textSize="16sp"
                 android:textColor="#040303"
                 android:includeFontPadding="false"
+                android:fontFamily="@font/pyidaungsu_numbers"
                 android:textStyle="bold"
                 tools:text="Totle price" />
         </androidx.appcompat.widget.LinearLayoutCompat>

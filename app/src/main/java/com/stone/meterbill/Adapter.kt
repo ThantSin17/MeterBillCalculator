@@ -39,6 +39,13 @@ var bills:ArrayList<Bill> = arrayListOf()
             price.text=bill.price.toString()
             cost.text=bill.cost.toString()
         }
+        private fun changeToMyanmerNumber(str:Double): String{
+            var string=str.toString()
+            return string.replace("0","၀").replace("1","၁").replace("2","၂").replace("3","၃")
+                .replace("4","၄").replace("5","၅").replace("6","၆").replace("7","၇")
+                .replace("8","၈").replace("9","၉")
+        }
     }
+
 
 }
